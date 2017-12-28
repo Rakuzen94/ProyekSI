@@ -3,35 +3,63 @@ include('header.php');
 require_once("connect.php");
 
 if (isset($_POST['register'])) {
-	//memfilter data inputan yang masuk
-	$name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-	$username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+		//memfilter data inputan yang masuk
+		$name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+		$username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+		
+		//mengenkripsi password
+		//bisa menggunakan md5 atau password_hash
+		$password = password_hash($_POST["password"], PASSWORD_DEFAULT);
+		$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+		
+		//queery select apabila username sudah ada dalam database
+		$query = "SELECT username FROM users WHERE username=:usernamenya";
+		
+		$getUsername = $db->prepare($query);
+		
+		//bind parameter ke query
+		$paramUsername =array(
+		":usernamenya" => $username
+		 );
+		
+		//eksekusi query select
+		$getUsername->execute($paramUsername);
+		
+		//menyimpan hasil query
+		$result = $getUsername->fetch(PDO::FETCH_ASSOC);
+		
+		//jika username ada, maka akan memunculkan alert bahwa username sudah dipakai
+		//tetap dihalaman register
+		if ($result) {
+			echo '<script language="javascript">';
+			echo 'alert("username dah dipakai brot")';
+			echo '</script>';
+		} else {
+			//jika username tidak ada, maka diproses ke dalam database
+		
+			//menyiapkan queery
+			$sql = "INSERT INTO users (name, username, email, password)
+			VALUES (:name, :username, :email, :password)";
+			$stmt = $db->prepare($sql);
 
-	//mengenkripsi password
-	//bisa menggunakan md5 atau password_hash
-	$password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-	$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+			//bind parameter ke query
+			$params = array(
+				":name" => $name, 
+				":username" => $username,
+				":password" => $password,
+				":email" => $email
+			);	
 
-	//menyiapkan queery
-	$sql = "INSERT INTO users (name, username, email, password)
-	VALUES (:name, :username, :email, :password)";
-	$stmt = $db->prepare($sql);
+			//eksekusi query untuk menyimpan ke database
+			$saved = $stmt->execute($params);
 
-	//bind parameter ke query
-	$params = array(
-		":name" => $name, 
-		":username" => $username,
-		":password" => $password,
-		":email" => $email
-	);	
+			//jika query simpan, maka user sudah terdaftar
+			//maka alihkan ke halaman login
 
-	//eksekusi query untuk menyimpan ke database
-	$saved = $stmt->execute($params);
-
-	//jika query simpan, maka user sudah terdaftar
-	//maka alihkan ke halaman login
-
-	if ($saved) header("Location: login.php"); 
+			if ($saved) {
+				header("Location: login.php"); 
+			}
+		}
 	}
 
 	?>

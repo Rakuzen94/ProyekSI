@@ -29,8 +29,8 @@ require_once("connect.php");
 
 // 	if ($saved) header("Location: timeline.php"); 
 // 	}
-
-$query = $db->prepare("select * from users where id='17' ");
+$username = $_SESSION["user"]["username"];
+$query = $db->prepare("select * from users where username='$username' ");
 $query->execute();
 
 ?>
