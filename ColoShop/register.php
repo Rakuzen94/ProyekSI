@@ -38,8 +38,8 @@ if (isset($_POST['register'])) {
 			//jika username tidak ada, maka diproses ke dalam database
 		
 			//menyiapkan queery
-			$sql = "INSERT INTO users (name, username, email, password)
-			VALUES (:name, :username, :email, :password)";
+			$sql = "INSERT INTO users (name, username, email, password, role)
+			VALUES (:name, :username, :email, :password, 2)";
 			$stmt = $db->prepare($sql);
 
 			//bind parameter ke query
