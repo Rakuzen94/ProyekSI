@@ -5,7 +5,7 @@ if (isset($_POST["login"])) {
 	$username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
 	$password = filter_input(INPUT_POST, 'password',FILTER_SANITIZE_STRING);
 	
-	//select data yang rolenya 2 yakni user, jadi admin (role=1) gak bisa login
+	//select data yang rolenya 1 yakni admin, jadi user (role=2) gak bisa login
 	$sql = "SELECT * FROM users WHERE role=1 AND username=:username OR email=:email";
 	$stmt = $db->prepare($sql);
 

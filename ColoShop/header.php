@@ -62,14 +62,13 @@
 										<i class="fa fa-angle-down"></i>
 									</a>
 									<ul class="account_selection">
-										<?php if (isset($_SESSION["user"])) {?>
+										<?php if (isset($_SESSION["user"]) && $_SESSION["user"]["username"] != "admin") { ?>
 										<li><a ><i class="fa fa-user" aria-hidden="true"></i><?php echo $_SESSION["user"]["username"]; ?></a></li>
 										<li><a href="logout.php"><i class="fa fa-logout" aria-hidden="true"></i>Logout</a></li>
-										<?php } else {?>
+										<?php } else { ?>
 										<li><a href="login.php"><i class="fa fa-sign-in" aria-hidden="true"></i>Sign In</a></li>
 										<li><a href="register.php"><i class="fa fa-user-plus" aria-hidden="true"></i>Register</a></li>
 										<?php } ?>
-										
 									</ul>
 								</li>
 							</ul>
